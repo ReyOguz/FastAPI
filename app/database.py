@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from .config import settings
 
-SQLALCHEMY_DB_URL = f'{settings.DATABASE_TYPE}://{settings.DATABASE_USER_NAME}:{settings.DATABASE_PASSWORD}@{settings.DATABASE_URL}/{settings.DATABASE_NAME}'
+SQLALCHEMY_DB_URL = f'{settings.DATABASE_TYPE}://{settings.DATABASE_USER_NAME}:{settings.DATABASE_PASSWORD}@{settings.DATABASE_URL}:{settings.DATABASE_PORT_NUMBER}/{settings.DATABASE_NAME}'
 
 # Create an engine that is going to connect to and talk to our database
 engine = create_engine(SQLALCHEMY_DB_URL) 
