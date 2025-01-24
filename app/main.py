@@ -1,23 +1,19 @@
+# FastAPI server imports
 from fastapi import FastAPI, Response, status, HTTPException, Depends
-from fastapi.params import Body
-from pydantic import BaseModel
-from typing import Optional
-import psycopg2 as pg2
-from psycopg2.extras import RealDictCursor
-import time
 
+# Data Validation imports
+from .DataValidationSchemas import Post
+
+# Database and sqlAlchemy imports
 from . import models
 from .database import engine, get_db
 from sqlalchemy.orm import Session
 
+###################################################################################
+
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-
-class Post(BaseModel):
-  title: str
-  content: str
-  published: bool = True
 
 # Get route for simple home url hit.
 @app.get("/")
