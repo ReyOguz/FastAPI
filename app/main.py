@@ -9,8 +9,14 @@ from . import models
 from .database import engine, get_db
 from sqlalchemy.orm import Session
 
+# Hashing imports
+from .utils import hash_password
+
+
 ###################################################################################
 
+
+# For orm db connection
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -82,11 +88,12 @@ def delete_post(id: int, db: Session = Depends(get_db)):
 # POST endpoint to create a user
 @app.post("/users", status_code=status.HTTP_201_CREATED, response_model=UserCreateResponse)
 def create_user(payload: UserCreateRequest, db: Session = Depends(get_db)):
-  
+
   user = db.query(models.User).filter(models.User.email == payload.email).first()
   if user:
     raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="A user with the email you have provided already exists")
   
+  payload.password = hash_password(payload.password)
   newUser = models.User(**payload.model_dump())
   db.add(newUser)
   db.commit()
@@ -94,16 +101,3 @@ def create_user(payload: UserCreateRequest, db: Session = Depends(get_db)):
   print(newUser)
   
   return newUser
-
-
-
-  
-
-  
-  
-
-
-
-  
-  
-  
