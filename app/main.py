@@ -39,14 +39,11 @@ def create_post(payload: Post, db: Session = Depends(get_db)):
   db.refresh(newPost)
   return {"data": payload}
   
-
-
 # GET route to retireve a post with a specific id
 @app.get("/posts/{id}")
 def get_post(id: int, db: Session = Depends(get_db)):
 
   post = db.query(models.Post).filter(models.Post.id == id).first()
-
   if not post:
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
                         detail=f"The post with id {id} you are looking for was not found")
@@ -74,11 +71,9 @@ def delete_post(id: int, db: Session = Depends(get_db)):
 def update_post(id: int, payload: Post, db: Session = Depends(get_db)):
   
   postOfI = db.query(models.Post).filter(models.Post.id == id)
-
   if not postOfI.first():
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"The post with id {id} you are looking to update does not exist")
 
-  
   postOfI.update(payload.model_dump(), synchronize_session=False)
   db.commit()
 
