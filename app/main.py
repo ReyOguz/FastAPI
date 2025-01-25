@@ -91,8 +91,9 @@ def create_user(payload: UserCreateRequest, db: Session = Depends(get_db)):
   db.add(newUser)
   db.commit()
   db.refresh(newUser)
-
-  return { newUser }
+  print(newUser)
+  
+  return newUser
 
 
 

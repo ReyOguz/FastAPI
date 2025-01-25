@@ -24,5 +24,9 @@ class UserCreateRequest(BaseModel):
   password: str
 
 class UserCreateResponse(BaseModel):
+  id: int
   email: EmailStr
   created_at: datetime
+
+  class Config:
+    from_attributes = True
