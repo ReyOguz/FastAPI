@@ -2,7 +2,7 @@
 from fastapi import FastAPI, Response, status, HTTPException, Depends
 
 # Data Validation imports
-from .DataValidationSchemas import PostCreate, PostUpdate, PostResponse
+from .DataValidationSchemas import PostCreate, PostUpdate, PostResponse, UserCreateRequest, UserCreateResponse
 
 # Database and sqlAlchemy imports
 from . import models
@@ -14,6 +14,8 @@ from sqlalchemy.orm import Session
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+################################# POSTS ENDPOINTS #################################
 
 # GET route to retieve all posts in db
 @app.get("/posts", response_model=list[PostResponse])
@@ -72,6 +74,26 @@ def delete_post(id: int, db: Session = Depends(get_db)):
 
   return Response(status_code=status.HTTP_204_NO_CONTENT)
   
+################################# POSTS ENDPOINTS #################################
+
+################################# USERS ENDPOINTS #################################
+
+
+# POST endpoint to create a user
+@app.post("/users", status_code=status.HTTP_201_CREATED, response_model=UserCreateResponse)
+def create_user(payload: UserCreateRequest, db: Session = Depends(get_db)):
+  
+  user = db.query(models.User).filter(models.User.email == payload.email).first()
+  if user:
+    raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="A user with the email you have provided already exists")
+  
+  newUser = models.User(**payload.model_dump())
+  db.add(newUser)
+  db.commit()
+  db.refresh(newUser)
+
+  return { newUser }
+
 
 
   
