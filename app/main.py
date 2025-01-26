@@ -2,7 +2,7 @@
 from fastapi import FastAPI, Response, status, HTTPException, Depends
 
 # Data Validation imports
-from .DataValidationSchemas import PostCreate, PostUpdate, PostResponse, UserCreateRequest, UserCreateResponse
+from .DataValidationSchemas import PostCreate, PostUpdate, PostResponse, UserCreateRequest, UserCreateResponse, UserGetResponse
 
 # Database and sqlAlchemy imports
 from . import models
@@ -101,3 +101,14 @@ def create_user(payload: UserCreateRequest, db: Session = Depends(get_db)):
   print(newUser)
   
   return newUser
+
+
+@app.get("/users/{id}", status_code=status.HTTP_200_OK,  response_model=UserGetResponse)
+def get_user(id: int, db: Session = Depends(get_db)):
+  user = db.query(models.User).filter(models.User.id == id).first()
+
+  if not user:
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="The user you are looking for could not be found")
+
+  return user
+  

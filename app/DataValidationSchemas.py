@@ -30,3 +30,7 @@ class UserCreateResponse(BaseModel):
 
   class Config:
     from_attributes = True
+
+
+class UserGetResponse(UserCreateResponse):
+  pass
