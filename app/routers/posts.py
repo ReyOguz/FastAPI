@@ -11,10 +11,13 @@ from sqlalchemy.orm import Session
 
 models.Base.metadata.create_all(bind=engine)
 
-router = APIRouter()
+router = APIRouter(
+  prefix="/posts",
+  tags=['Posts']
+)
 
 # GET route to retieve all posts in db
-@router.get("/posts", response_model=list[PostResponse])
+@router.get("/", response_model=list[PostResponse])
 def get_all_posts(db: Session = Depends(get_db)):
   all_posts = db.query(models.Post).all()
   if not all_posts:
@@ -24,7 +27,7 @@ def get_all_posts(db: Session = Depends(get_db)):
   return all_posts
 
 # GET route to retireve a post with a specific id
-@router.get("/posts/{id}", response_model=PostResponse)
+@router.get("/{id}", response_model=PostResponse)
 def get_post(id: int, db: Session = Depends(get_db)):
 
   post = db.query(models.Post).filter(models.Post.id == id).first()
@@ -34,7 +37,7 @@ def get_post(id: int, db: Session = Depends(get_db)):
   return post
   
 # POST route to create a post
-@router.post("/posts", status_code=status.HTTP_201_CREATED, response_model=PostResponse)
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=PostResponse)
 def create_post(payload: PostCreate, db: Session = Depends(get_db)):
   newPost = models.Post(**payload.model_dump())
   db.add(newPost)
@@ -44,7 +47,7 @@ def create_post(payload: PostCreate, db: Session = Depends(get_db)):
 
 
 # PUT route to update the whole post with a specific id
-@router.put("/posts/{id}", response_model=PostResponse)
+@router.put("/{id}", response_model=PostResponse)
 def update_post(id: int, payload: PostUpdate, db: Session = Depends(get_db)):
   
   postOfI = db.query(models.Post).filter(models.Post.id == id)
@@ -58,7 +61,7 @@ def update_post(id: int, payload: PostUpdate, db: Session = Depends(get_db)):
 
 
 # DELETE route to delete a post with specific id
-@router.delete("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_post(id: int, db: Session = Depends(get_db)):
   
   postOfInterest = db.query(models.Post).filter(models.Post.id == id)

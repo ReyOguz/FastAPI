@@ -14,10 +14,14 @@ from ..utils import hash_password
 
 models.Base.metadata.create_all(bind=engine)
 
-router = APIRouter()
+router = APIRouter(
+  prefix="/users",
+  tags=['Users']
+  
+)
 
 # POST endpoint to create a user
-@router.post("/users", status_code=status.HTTP_201_CREATED, response_model=UserCreateResponse)
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=UserCreateResponse)
 def create_user(payload: UserCreateRequest, db: Session = Depends(get_db)):
 
   user = db.query(models.User).filter(models.User.email == payload.email).first()
@@ -34,7 +38,7 @@ def create_user(payload: UserCreateRequest, db: Session = Depends(get_db)):
   return newUser
 
 
-@router.get("/users/{id}", status_code=status.HTTP_200_OK,  response_model=UserGetResponse)
+@router.get("/{id}", status_code=status.HTTP_200_OK,  response_model=UserGetResponse)
 def get_user(id: int, db: Session = Depends(get_db)):
   user = db.query(models.User).filter(models.User.id == id).first()
 
@@ -42,4 +46,4 @@ def get_user(id: int, db: Session = Depends(get_db)):
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="The user you are looking for could not be found")
 
   return user
-  
+
