@@ -34,3 +34,7 @@ class UserCreateResponse(BaseModel):
 
 class UserGetResponse(UserCreateResponse):
   pass
+
+
+class UserLoginRequest(UserCreateRequest):
+  pass
