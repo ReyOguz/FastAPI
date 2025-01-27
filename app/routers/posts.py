@@ -6,6 +6,7 @@ from ..DataValidationSchemas import PostCreate, PostUpdate, PostResponse
 
 # Database and sqlAlchemy imports
 from .. import models
+from ..oauth2 import get_current_user
 from ..database import engine, get_db
 from sqlalchemy.orm import Session
 
@@ -38,7 +39,7 @@ def get_post(id: int, db: Session = Depends(get_db)):
   
 # POST route to create a post
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=PostResponse)
-def create_post(payload: PostCreate, db: Session = Depends(get_db)):
+def create_post(payload: PostCreate, db: Session = Depends(get_db), user_id: int = Depends(get_current_user)):
   newPost = models.Post(**payload.model_dump())
   db.add(newPost)
   db.commit()
@@ -48,7 +49,7 @@ def create_post(payload: PostCreate, db: Session = Depends(get_db)):
 
 # PUT route to update the whole post with a specific id
 @router.put("/{id}", response_model=PostResponse)
-def update_post(id: int, payload: PostUpdate, db: Session = Depends(get_db)):
+def update_post(id: int, payload: PostUpdate, db: Session = Depends(get_db), user_id: int = Depends(get_current_user)):
   
   postOfI = db.query(models.Post).filter(models.Post.id == id)
   if not postOfI.first():
@@ -62,7 +63,7 @@ def update_post(id: int, payload: PostUpdate, db: Session = Depends(get_db)):
 
 # DELETE route to delete a post with specific id
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_post(id: int, db: Session = Depends(get_db)):
+def delete_post(id: int, db: Session = Depends(get_db), user_id: int = Depends(get_current_user)):
   
   postOfInterest = db.query(models.Post).filter(models.Post.id == id)
   if not postOfInterest.first():
