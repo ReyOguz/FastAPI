@@ -8,6 +8,8 @@ class Settings(BaseSettings):
   DATABASE_NAME: str
   DATABASE_PORT_NUMBER: str
   SALT: str
+  JWT_SECRET_KEY: str
+  JWT_ALGORITHM: str
 
   class Config:
     env_file = ".env"

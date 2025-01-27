@@ -1,5 +1,6 @@
 # FastAPI server imports
 from fastapi import APIRouter, status, HTTPException, Depends
+from fastapi.security import OAuth2PasswordRequestForm
 
 # Data Validation imports
 from ..DataValidationSchemas import UserCreateRequest, UserCreateResponse, UserLoginRequest
@@ -11,6 +12,9 @@ from sqlalchemy.orm import Session
 
 # Hashing imports
 from ..utils import hash_password, verify_pwd
+
+# JWT token imports
+from ..oauth2 import create_access_token
 
 router = APIRouter(
   prefix='/auth',
@@ -35,18 +39,19 @@ def register_user(payload: UserCreateRequest, db: Session = Depends(get_db)):
   return newUser
 
 
-@ router.post("/login", status_code=status.HTTP_201_CREATED)
-def login(payload: UserLoginRequest, db: Session = Depends(get_db)):
+@router.post("/login", status_code=status.HTTP_201_CREATED)
+def login(payload: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
 
-  
-  user = db.query(models.User).filter(models.User.email == payload.email).first()
+  print("here")
+  user = db.query(models.User).filter(models.User.email == payload.username).first()
   if not user:
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Incorrect user credentials")
   
   if not verify_pwd(payload.password, user.password):
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Incorrect user credentials")
 
-  return { "token": "Example Token" }
+  jwt_access_token = create_access_token(data={"user_id": user.id})
+  return { "access_token": jwt_access_token, "token_type": "bearer" }
 
 
 
