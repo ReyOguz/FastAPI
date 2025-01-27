@@ -1,11 +1,12 @@
 import jwt
-from jwt.exceptions import InvalidTokenError
+from jwt.exceptions import InvalidTokenError, ExpiredSignatureError
 from .config import settings
 from datetime import datetime, timedelta
 from fastapi import HTTPException, status, Depends
 from .DataValidationSchemas import TokenData
 from fastapi.security import OAuth2PasswordBearer
 
+# Piece of code that extracts the JWT token from the header of a request
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 SECRET_KEY = settings.JWT_SECRET_KEY
@@ -29,15 +30,30 @@ def create_access_token(data: dict):
   return encoded_jwt
 
 def verify_access_token(token: str):
-  credentials_exception = HTTPException( status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate credentials", headers={"WWW-Authenticate": "Bearer"} ) 
+  credentials_exception = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED, 
+    detail="Could not validate credentials", 
+    headers={"WWW-Authenticate": "Bearer"}
+  ) 
   try:
+    # decode extracted jwt token into payload dict
     payload = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
-    userId = payload.get("user_id", None)
+    
+    # retrieve user id from decoded payload
+    userId = payload.get("user_id")
 
+    # if the credentials are invalid, raise an exception
     if not userId:
       raise credentials_exception
 
     token_data = TokenData(id=userId)
+  except ExpiredSignatureError:
+    credentials_exception = HTTPException(
+      status_code=status.HTTP_401_UNAUTHORIZED, 
+      detail="Token has expired, please login again.", 
+      headers={"WWW-Authenticate": "Bearer"} 
+    ) 
+    raise credentials_exception
   except InvalidTokenError:
     raise credentials_exception
   
