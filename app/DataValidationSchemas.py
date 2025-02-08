@@ -15,6 +15,7 @@ class PostUpdate(PostBase):
 
 class PostResponse(PostBase):
   id: int
+  owner_id: int
 
   class Config:
     from_attributes = True

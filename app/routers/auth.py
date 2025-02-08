@@ -34,7 +34,6 @@ def register_user(payload: UserCreateRequest, db: Session = Depends(get_db)):
   db.add(newUser)
   db.commit()
   db.refresh(newUser)
-  print(newUser)
   
   return newUser
 

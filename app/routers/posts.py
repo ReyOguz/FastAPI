@@ -42,7 +42,8 @@ def get_post(id: int, db: Session = Depends(get_db), currUser: int = Depends(get
 # POST route to create a post
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=PostResponse)
 def create_post(payload: PostCreate, db: Session = Depends(get_db), currUser: int = Depends(get_current_user)):
-  newPost = models.Post(**payload.model_dump())
+  
+  newPost = models.Post(owner_id=currUser.id, **payload.model_dump())
   db.add(newPost)
   db.commit()
   db.refresh(newPost)
