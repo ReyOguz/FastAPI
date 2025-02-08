@@ -19,7 +19,9 @@ router = APIRouter(
 
 # GET route to retieve all posts in db
 @router.get("/", response_model=list[PostResponse])
-def get_all_posts(db: Session = Depends(get_db), user_id: int = Depends(get_current_user)):
+def get_all_posts(db: Session = Depends(get_db), currUser = Depends(get_current_user)):
+  
+  print(currUser.id)
   all_posts = db.query(models.Post).all()
   if not all_posts:
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
@@ -29,7 +31,7 @@ def get_all_posts(db: Session = Depends(get_db), user_id: int = Depends(get_curr
 
 # GET route to retireve a post with a specific id
 @router.get("/{id}", response_model=PostResponse)
-def get_post(id: int, db: Session = Depends(get_db)):
+def get_post(id: int, db: Session = Depends(get_db), currUser: int = Depends(get_current_user)):
 
   post = db.query(models.Post).filter(models.Post.id == id).first()
   if not post:
@@ -39,7 +41,7 @@ def get_post(id: int, db: Session = Depends(get_db)):
   
 # POST route to create a post
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=PostResponse)
-def create_post(payload: PostCreate, db: Session = Depends(get_db), user_id: int = Depends(get_current_user)):
+def create_post(payload: PostCreate, db: Session = Depends(get_db), currUser: int = Depends(get_current_user)):
   newPost = models.Post(**payload.model_dump())
   db.add(newPost)
   db.commit()
@@ -49,7 +51,7 @@ def create_post(payload: PostCreate, db: Session = Depends(get_db), user_id: int
 
 # PUT route to update the whole post with a specific id
 @router.put("/{id}", response_model=PostResponse)
-def update_post(id: int, payload: PostUpdate, db: Session = Depends(get_db), user_id: int = Depends(get_current_user)):
+def update_post(id: int, payload: PostUpdate, db: Session = Depends(get_db), currUser: int = Depends(get_current_user)):
   
   postOfI = db.query(models.Post).filter(models.Post.id == id)
   if not postOfI.first():
@@ -63,7 +65,7 @@ def update_post(id: int, payload: PostUpdate, db: Session = Depends(get_db), use
 
 # DELETE route to delete a post with specific id
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_post(id: int, db: Session = Depends(get_db), user_id: int = Depends(get_current_user)):
+def delete_post(id: int, db: Session = Depends(get_db), currUser: int = Depends(get_current_user)):
   
   postOfInterest = db.query(models.Post).filter(models.Post.id == id)
   if not postOfInterest.first():

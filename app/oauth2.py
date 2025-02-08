@@ -6,6 +6,10 @@ from fastapi import HTTPException, status, Depends
 from .DataValidationSchemas import TokenData
 from fastapi.security import OAuth2PasswordBearer
 
+from .database import engine, get_db
+from sqlalchemy.orm import Session
+from . import models
+
 # Piece of code that extracts the JWT token from the header of a request
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
@@ -59,5 +63,9 @@ def verify_access_token(token: str):
   
   return token_data
 
-def get_current_user(token: str = Depends(oauth2_scheme)):
-  return verify_access_token(token)
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+
+  token = verify_access_token(token)
+  currUser = db.query(models.User).filter(models.User.id == token.id).first()
+  
+  return currUser

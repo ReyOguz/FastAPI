@@ -42,7 +42,6 @@ def register_user(payload: UserCreateRequest, db: Session = Depends(get_db)):
 @router.post("/login", status_code=status.HTTP_201_CREATED, response_model=Token)
 def login(payload: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
 
-  print("here")
   user = db.query(models.User).filter(models.User.email == payload.username).first()
   if not user:
     raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Incorrect user credentials")
