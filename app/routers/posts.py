@@ -3,6 +3,7 @@ from fastapi import APIRouter, Response, status, HTTPException, Depends
 
 # Data Validation imports
 from ..DataValidationSchemas import PostCreate, PostUpdate, PostResponse
+from typing import Optional
 
 # Database and sqlAlchemy imports
 from .. import models
@@ -19,9 +20,9 @@ router = APIRouter(
 
 # GET route to retieve all posts in db
 @router.get("/", response_model=list[PostResponse])
-def get_all_posts(db: Session = Depends(get_db), currUser = Depends(get_current_user), limit: int = 10, skip: int = 0):
+def get_all_posts(db: Session = Depends(get_db), currUser = Depends(get_current_user), limit: int = 10, skip: int = 0, search: str = Optional[str]):
   print(limit)
-  all_posts = db.query(models.Post).limit(limit).offset(skip).all()
+  all_posts = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
   if not all_posts:
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
                         detail=f"No Posts in the database")
