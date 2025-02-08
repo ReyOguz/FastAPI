@@ -13,12 +13,6 @@ class PostCreate(PostBase):
 class PostUpdate(PostBase):
   pass
 
-class PostResponse(PostBase):
-  id: int
-  owner_id: int
-
-  class Config:
-    from_attributes = True
 
 
 class UserCreateRequest(BaseModel):
@@ -33,6 +27,13 @@ class UserCreateResponse(BaseModel):
   class Config:
     from_attributes = True
 
+class PostResponse(PostBase):
+  id: int
+  owner_id: int
+  owner: UserCreateResponse
+
+  class Config:
+    from_attributes = True
 
 class UserGetResponse(UserCreateResponse):
   pass
