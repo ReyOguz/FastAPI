@@ -50,14 +50,25 @@ def create_post(payload: PostCreate, db: Session = Depends(get_db), currUser: in
   return newPost
 
 
+
+
+
+
+
+
+
 # PUT route to update the whole post with a specific id
 @router.put("/{id}", response_model=PostResponse)
 def update_post(id: int, payload: PostUpdate, db: Session = Depends(get_db), currUser: int = Depends(get_current_user)):
   
   postOfI = db.query(models.Post).filter(models.Post.id == id)
+
   if not postOfI.first():
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"The post with id {id} you are looking to update does not exist")
 
+  if postOfI.first().owner_id != currUser.id:
+    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"Not authorised to perform requested action")
+  
   postOfI.update(payload.model_dump(), synchronize_session=False)
   db.commit()
 
@@ -72,6 +83,9 @@ def delete_post(id: int, db: Session = Depends(get_db), currUser: int = Depends(
   if not postOfInterest.first():
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"The post you are trying to delete with id: {id} does not exist")
   
+  if postOfInterest.first().owner_id != currUser.id:
+    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"Not authorised to perform requested action")
+
   postOfInterest.delete(synchronize_session=False)
   db.commit()
 
