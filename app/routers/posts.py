@@ -19,9 +19,9 @@ router = APIRouter(
 
 # GET route to retieve all posts in db
 @router.get("/", response_model=list[PostResponse])
-def get_all_posts(db: Session = Depends(get_db), currUser = Depends(get_current_user), limit: int = 10):
+def get_all_posts(db: Session = Depends(get_db), currUser = Depends(get_current_user), limit: int = 10, skip: int = 0):
   print(limit)
-  all_posts = db.query(models.Post).limit(limit).all()
+  all_posts = db.query(models.Post).limit(limit).offset(skip).all()
   if not all_posts:
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
                         detail=f"No Posts in the database")
