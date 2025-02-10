@@ -23,6 +23,10 @@ def vote(payload: VoteRequest, db: Session = Depends(get_db), currUser = Depends
   post_id = payload.post_id
   vote_dir = payload.direction
 
+  post_query = db.query(models.Post).filter(models.post.id == post_id).first()
+  if not post_query:
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Post does not exist")
+
   vote_query = db.query(models.Vote).filter(models.Vote.post_id == post_id, models.Vote.user_id == user_id)
 
   if vote_dir == 1: # add vote
