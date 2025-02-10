@@ -50,13 +50,6 @@ def create_post(payload: PostCreate, db: Session = Depends(get_db), currUser: in
   return newPost
 
 
-
-
-
-
-
-
-
 # PUT route to update the whole post with a specific id
 @router.put("/{id}", response_model=PostResponse)
 def update_post(id: int, payload: PostUpdate, db: Session = Depends(get_db), currUser: int = Depends(get_current_user)):

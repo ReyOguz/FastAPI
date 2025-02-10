@@ -10,6 +10,7 @@ class Settings(BaseSettings):
   SALT: str
   JWT_SECRET_KEY: str
   JWT_ALGORITHM: str
+  JWT_EXPIRY_MINS: int
 
   class Config:
     env_file = ".env"
