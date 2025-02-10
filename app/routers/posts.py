@@ -2,7 +2,7 @@
 from fastapi import APIRouter, Response, status, HTTPException, Depends
 
 # Data Validation imports
-from ..DataValidationSchemas import PostCreate, PostUpdate, PostResponse, PostResponseVote
+from ..DataValidationSchemas import PostCreate, PostUpdate, PostOut, PostResponse
 from typing import Optional
 
 # Database and sqlAlchemy imports
@@ -20,7 +20,8 @@ router = APIRouter(
 )
 
 # GET route to retieve all posts in db
-@router.get("/", response_model=list[PostResponseVote])
+# @router.get("/")
+@router.get("/", response_model=list[PostOut])
 def get_all_posts(db: Session = Depends(get_db), currUser = Depends(get_current_user), limit: int = 10, skip: int = 0, search: str = Optional[str]):
   
 
@@ -34,7 +35,7 @@ def get_all_posts(db: Session = Depends(get_db), currUser = Depends(get_current_
   return all_posts
 
 # GET route to retireve a post with a specific id
-@router.get("/{id}", response_model=PostResponseVote)
+@router.get("/{id}", response_model=PostOut)
 def get_post(id: int, db: Session = Depends(get_db), currUser = Depends(get_current_user)):
 
   post = db.query(models.Post, func.count(models.Vote.post_id).label("votes")).join(models.Vote, models.Post.id == models.Vote.post_id, isouter=True).group_by(models.Post.id).filter(models.Post.id == id).first()
