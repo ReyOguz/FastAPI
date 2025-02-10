@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Optional, Literal
 
 class PostBase(BaseModel):
+  id: int
   title: str
   content: str
   published: bool = True
@@ -13,7 +14,9 @@ class PostCreate(PostBase):
 class PostUpdate(PostBase):
   pass
 
-
+class PostResponseVote(BaseModel):
+  Post: PostBase
+  votes: int
 
 class UserCreateRequest(BaseModel):
   email: EmailStr

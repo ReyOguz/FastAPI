@@ -2,7 +2,7 @@
 from fastapi import APIRouter, Response, status, HTTPException, Depends
 
 # Data Validation imports
-from ..DataValidationSchemas import PostCreate, PostUpdate, PostResponse
+from ..DataValidationSchemas import PostCreate, PostUpdate, PostResponse, PostResponseVote
 from typing import Optional
 
 # Database and sqlAlchemy imports
@@ -10,6 +10,7 @@ from .. import models
 from ..oauth2 import get_current_user
 from ..database import engine, get_db
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -19,10 +20,13 @@ router = APIRouter(
 )
 
 # GET route to retieve all posts in db
-@router.get("/", response_model=list[PostResponse])
+@router.get("/", response_model=list[PostResponseVote])
 def get_all_posts(db: Session = Depends(get_db), currUser = Depends(get_current_user), limit: int = 10, skip: int = 0, search: str = Optional[str]):
-  print(limit)
-  all_posts = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
+  
+
+  # all_posts = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
+  all_posts = db.query(models.Post, func.count(models.Vote.post_id).label("votes")).join(models.Vote, models.Post.id == models.Vote.post_id, isouter=True).group_by(models.Post.id).limit(limit).offset(skip).all()
+  
   if not all_posts:
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
                         detail=f"No Posts in the database")
@@ -30,10 +34,11 @@ def get_all_posts(db: Session = Depends(get_db), currUser = Depends(get_current_
   return all_posts
 
 # GET route to retireve a post with a specific id
-@router.get("/{id}", response_model=PostResponse)
+@router.get("/{id}", response_model=PostResponseVote)
 def get_post(id: int, db: Session = Depends(get_db), currUser = Depends(get_current_user)):
 
-  post = db.query(models.Post).filter(models.Post.id == id).first()
+  post = db.query(models.Post, func.count(models.Vote.post_id).label("votes")).join(models.Vote, models.Post.id == models.Vote.post_id, isouter=True).group_by(models.Post.id).filter(models.Post.id == id).first()
+  # post = db.query(models.Post).filter(models.Post.id == id).first()
   if not post:
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"The post with id {id} you are looking for was not found")
   
