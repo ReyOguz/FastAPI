@@ -12,8 +12,6 @@ from ..database import engine, get_db
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
-models.Base.metadata.create_all(bind=engine)
-
 router = APIRouter(
   prefix="/posts",
   tags=['Posts']

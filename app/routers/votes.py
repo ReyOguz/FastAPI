@@ -9,8 +9,6 @@ from ..oauth2 import get_current_user
 from ..database import engine, get_db
 from sqlalchemy.orm import Session
 
-models.Base.metadata.create_all(bind=engine)
-
 router = APIRouter(
   prefix='/vote',
   tags=["Votes"]

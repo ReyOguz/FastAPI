@@ -12,8 +12,6 @@ from sqlalchemy.orm import Session
 # Hashing imports
 from ..utils import hash_password
 
-models.Base.metadata.create_all(bind=engine)
-
 router = APIRouter(
   prefix="/users",
   tags=['Users']

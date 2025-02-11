@@ -4,8 +4,9 @@ from .routers import posts, users, auth, votes
 from . import models
 from . database import engine
 
+# models.Base.metadata.create_all(bind=engine)
+
 app = FastAPI()
-models.Base.metadata.create_all(bind=engine)
 
 # Including router for posts endpoints
 app.include_router(posts.router)
