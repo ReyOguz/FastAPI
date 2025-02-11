@@ -7,6 +7,7 @@ class Settings(BaseSettings):
   DATABASE_URL: str
   DATABASE_NAME: str
   DATABASE_PORT_NUMBER: str
+  DATABASE_DRIVER: str
   SALT: str
   JWT_SECRET_KEY: str
   JWT_ALGORITHM: str
