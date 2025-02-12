@@ -25,7 +25,7 @@ app.add_middleware(
 
 @app.get("/", response_class=HTMLResponse)
 def main():
-  return """<h1>Hello and welcome</h1>"""
+  return """<h1 style="padding-left:50px, padding-top:50px, border: solid 2px green">Hello and welcome to my first ever deployed backend api!!!</h1>"""
 
 # Including router for posts endpoints
 app.include_router(posts.router)
