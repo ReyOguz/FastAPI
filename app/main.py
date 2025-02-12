@@ -24,7 +24,7 @@ app.add_middleware(
 
 @app.get("/")
 def main():
-  return ("<h1> Hello and welcome<h1\>")
+  return ("<h1> Hello and welcome</h1>")
 
 # Including router for posts endpoints
 app.include_router(posts.router)
