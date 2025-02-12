@@ -1,5 +1,6 @@
 # FastAPI server imports
 from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
 from .routers import posts, users, auth, votes
 from . import models
 from . database import engine
@@ -22,9 +23,9 @@ app.add_middleware(
   allow_headers=["*"],
 )
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 def main():
-  return ("<h1> Hello and welcome</h1>")
+  return """<h1>Hello and welcome</h1>"""
 
 # Including router for posts endpoints
 app.include_router(posts.router)
