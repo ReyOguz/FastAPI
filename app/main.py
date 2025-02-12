@@ -24,7 +24,7 @@ app.add_middleware(
 
 @app.get("/")
 def main():
-  return {"msg": "Hello Mr Datli Selda Kaymakci how are you today?!"}
+  return {"Welcome Message": "Hello and welcome to my first ever deployed backend api!!!"}
 
 # Including router for posts endpoints
 app.include_router(posts.router)
