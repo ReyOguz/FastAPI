@@ -29,7 +29,7 @@ def main():
   
   <div style="text-align:center; border: 5px solid transparent; border-image: linear-gradient(to bottom right, #b827fc 0%, #2c90fc 25%, #b8fd33 50%, #fec837 75%, #fd1892 100%); border-image-slice: 1; height: 300px; margin: 20px auto; width: 300px">
     <div>PLEASE NOTE: HTTPS HAS NOT BEEN SET UP AS IT REQUIRES THE PURCHASE OF A DOMAIN. PLEASE DO NOT INPUT ANY SENSITIVE INFORMATION.</div>
-    </div>Hello and welcome to my first ever deployed backend api! This is a backend only system, there is no frontend. To have a look at the backend functionality available, please navigate to <a href="http://134.199.153.5/docs">this</a> page to see the documentation.</div>
+    <div>Hello and welcome to my first ever deployed backend api! This is a backend only system, there is no frontend. To have a look at the backend functionality available, please navigate to <a href="http://134.199.153.5/docs">this</a> page to see the documentation.</div>
   </div>
   """
 
