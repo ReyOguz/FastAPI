@@ -26,7 +26,7 @@ app.add_middleware(
 @app.get("/", response_class=HTMLResponse)
 def main():
   return """
-  <div style="border: 5px solid transparent; border-image: linear-gradient(to bottom right, #b827fc 0%, #2c90fc 25%, #b8fd33 50%, #fec837 75%, #fd1892 100%); border-image-slice: 1; height: 300px; margin: 20px auto; width: 300px">Hello and welcome to my first ever deployed backend api!!!</div>
+  <div style="text-align:center; border: 5px solid transparent; border-image: linear-gradient(to bottom right, #b827fc 0%, #2c90fc 25%, #b8fd33 50%, #fec837 75%, #fd1892 100%); border-image-slice: 1; height: 300px; margin: 20px auto; width: 300px">Hello and welcome to my first ever deployed backend api!!!</div>
   """
 
 
