@@ -14,7 +14,6 @@ app = FastAPI()
 # SECURITY BEST PRACTICE IS TO NARROW THIS LIST DOWN AS MUCH AS POSSIBLE AND NOT ALLOW THE PROCESSING OF UNWANTED REQUESTS
 origins = []
 
-
 app.add_middleware(
   CORSMiddleware,
   allow_origins=origins,
@@ -26,7 +25,12 @@ app.add_middleware(
 
 @app.get("/", response_class=HTMLResponse)
 def main():
-  return """<h1>Hello and welcome to my first ever deployed backend api!!!</h1>"""
+  return """
+  <div style=""background-color: #302244; border: 5px solid transparent; border-image: linear-gradient(to bottom right, #b827fc 0%, #2c90fc 25%, #b8fd33 50%, #fec837 75%, #fd1892 100%); border-image-slice: 1; height: 200px; margin: 20px auto; width: 200px"">Hello and welcome to my first ever deployed backend api!!!</div>
+  """
+
+
+
 
 # Including router for posts endpoints
 app.include_router(posts.router)
