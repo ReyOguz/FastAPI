@@ -25,8 +25,7 @@ app.add_middleware(
 
 @app.get("/", response_class=HTMLResponse)
 def main():
-  return 
-  """
+  return """
   <!DOCTYPE html>
   <html>
       <head>
