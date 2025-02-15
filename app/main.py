@@ -12,7 +12,7 @@ app = FastAPI()
 
 # The origins list is a list of domains that can communicate with this backend. If a domain is not listed here, it will be blocked by CORS
 # SECURITY BEST PRACTICE IS TO NARROW THIS LIST DOWN AS MUCH AS POSSIBLE AND NOT ALLOW THE PROCESSING OF UNWANTED REQUESTS
-origins = []
+origins = ["*"]
 
 app.add_middleware(
   CORSMiddleware,
